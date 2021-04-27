@@ -1,33 +1,21 @@
 import React, { useContext, createContext } from 'react';
-const arbol = {
-  nombre: 'Cancela dentro de los 15 días y es ≥ 50.000',
-  tipo: 'condicion',
-  esVerdadero: false,
-  S: {
-    tipo: 'condicion',
-    nombre: 'Es < a 100.000',
-    esVerdadero: false,
-    S: {
-      tipo:'accion',
-      accion: '2% de descuento'
-    },
-    N: {
-      tipo:'accion',
-      accion: '5% de descuento'
-    },
-  },
-  N: {
-    tipo:'accion',
-    accion: 'No hay descuento'
-  },
-}
+import { crearArbol, obtenerRespuesta } from '../utils/binaryTree'
+const arbol = crearArbol()
 //Context
 export const AppContext = createContext(null);
 
 //Provider
 export const AppContextProvider = ({ children }) => {
   const [globalState, setGlobalState] = React.useState({arbol: arbol});
+  const [respuesta, setRespuesta] = React.useState(obtenerRespuesta(arbol));
 
+  const setArbol = ()=>{
+    const nuevaRespuesta = obtenerRespuesta(arbol)
+    if(nuevaRespuesta[nuevaRespuesta.length-1] !== respuesta[respuesta.length-1]){
+      setRespuesta(nuevaRespuesta)
+    }
+    setGlobalState({...globalState})
+  }
   //ComponentDidMouunt
   React.useEffect(() => {
     
@@ -35,8 +23,11 @@ export const AppContextProvider = ({ children }) => {
 
   //
   const values = React.useMemo(() => (
-    { globalState,      // States que seran visibles en el contexto.
-      setGlobalState,   // Funciones que son exportadas para manejo externo.
+    { globalState,
+      respuesta,        // States que seran visibles en el contexto.
+      setGlobalState,
+      setRespuesta,
+      setArbol   // Funciones que son exportadas para manejo externo.
     }), 
     [ 
       globalState ]);   // States que serán visibles en el contexto.
