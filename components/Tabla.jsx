@@ -1,8 +1,5 @@
-export default function Tabla(){
-
-  return(
-    <table>
-      
-    </table>
-  )
+export default function Tabla() {
+  return (
+    <table />
+  );
 }
