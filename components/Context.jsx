@@ -1,5 +1,6 @@
 import React, { useContext, createContext } from 'react';
 import { crearArbol, obtenerRespuesta } from '../utils/binaryTree';
+import useWindowSize from '../hooks/useWindowSize';
 
 const arbol = crearArbol();
 // Context
@@ -9,13 +10,14 @@ export const AppContext = createContext(null);
 export const AppContextProvider = ({ children }) => {
   const [globalState, setGlobalState] = React.useState({ arbol });
   const [respuesta, setRespuesta] = React.useState(obtenerRespuesta(arbol));
+  const windowSize = useWindowSize();
   const clipPath = React.useRef(null);
 
   const setArbol = (x) => {
     const nuevaRespuesta = obtenerRespuesta(arbol);
     if (nuevaRespuesta[nuevaRespuesta.length - 1] !== respuesta[respuesta.length - 1]) {
-      clipPath.current.animate({ r: window.innerWidth * x }, { duration: 500, fill: 'forwards' });
-      clipPath.current.animate({ r: window.innerWidth }, { duration: 500, fill: 'forwards', delay: 500 });
+      clipPath.current.animate({ r: (windowSize.width || window.innerWidth) * x }, { duration: 500, fill: 'forwards' });
+      clipPath.current.animate({ r: windowSize.width || window.innerWidth }, { duration: 500, fill: 'forwards', delay: 500 });
 
       setTimeout(() => { setRespuesta(nuevaRespuesta); setGlobalState({ ...globalState }); }, 500);
     }
