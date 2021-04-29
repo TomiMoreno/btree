@@ -1,7 +1,12 @@
 import { useAppContext } from './Context';
-
+import { useEffect } from 'react'
+import useWindowSize from '../hooks/useWindowSize'
 export default function ClipPath() {
   const { clipPath } = useAppContext();
+  const windowSize = useWindowSize()
+  useEffect(() => {
+    clipPath.current.animate({ r: windowSize.width}, { fill: 'forwards' });
+  }, [windowSize])
   return (
     <defs>
       <clipPath id="left-to-right">

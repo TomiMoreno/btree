@@ -10,7 +10,7 @@ export default function Rect({ condicionActual }) {
     <>
       <rect x={pos.x - 50} y={pos.y - 20} width="100" height="40" fill="blue" stroke="black" strokeWidth="4" />
       {respuesta.includes(condicionActual) && <rect x={pos.x - 50} y={pos.y - 20} width="100" height="40" fill="#0001ff" stroke={color} strokeWidth="4" clipPath="url(#left-to-right)" />}
-      <text className={styles.svgText} x={pos.x} y={pos.y + 14} pointerEvents="none">{condicionActual.accionNombre}</text>
+      <text className={styles.svgText} x={pos.x} y={pos.y + 14} pointerEvents="none">{condicionActual.alias}</text>
     </>
   );
 }

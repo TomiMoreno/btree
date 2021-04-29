@@ -1,25 +1,26 @@
 const arbol = {
-
+  alias: 'C1',
   nombre: 'Cancela dentro de los 15 días y es ≥ 50.000',
   tipo: 'condicion',
   esVerdadero: true,
   S: {
+    alias: 'C2',
     tipo: 'condicion',
     nombre: 'Es < a 100.000',
     esVerdadero: true,
     S: {
-      accionNombre: 'a1',
+      alias: 'A1',
       tipo: 'accion',
       accion: '2% de descuento',
     },
     N: {
-      accionNombre: 'a2',
+      alias: 'A2',
       tipo: 'accion',
       accion: '5% de descuento',
     },
   },
   N: {
-    accionNombre: 'a3',
+    alias: 'A3',
     tipo: 'accion',
     accion: 'No hay descuento',
   },
@@ -29,6 +30,7 @@ export function crearArbol() {
   let nivelActual = 1;
   const condicionesAVisitar = [arbol];
   const condiciones = [];
+  const acciones = [];
   const segmentos = [];
   let segmentoActual = [];
   let nodoActual;
@@ -53,10 +55,14 @@ export function crearArbol() {
     }
     if (nodoActual.tipo === 'condicion') {
       condiciones.push(nodoActual);
+    } else{
+      acciones.push(nodoActual)
     }
   }
   asignarPosicionEnY(segmentoActual);
   asignarPosicionEnX(segmentos, arbol);
+  arbol.condiciones = condiciones;
+  arbol.acciones = acciones.sort((a,b) => a.alias.localeCompare(b.alias))
   return arbol;
 }
 function asignarPosicionEnY(segmentoActual) {
@@ -89,4 +95,35 @@ export function obtenerRespuesta(arbol) {
   }
   respuestas.push(nodoActual);
   return respuestas;
+}
+
+export function iterar(){
+  const {condiciones, acciones} = arbol
+  const filas = {condiciones:{},acciones:{}}
+  const ciclo = condiciones.map((_e,i)=>2**i)
+  let longitud = 2 ** condiciones.length
+  for(const accion of acciones){
+    filas.acciones[accion.alias] = []
+  }
+  for(const condicion of condiciones){
+    filas.condiciones[condicion.alias] = []
+  }
+  for(let i = 0; i < longitud; i++){
+    ciclo.forEach((e, index)=>{
+      const condicion = condiciones[index]
+      if(i%e === 0) {
+        condicion.esVerdadero = !condicion.esVerdadero
+      }
+      filas.condiciones[condicion.alias].push(Number(condicion.esVerdadero))
+    })
+    let respuesta = obtenerRespuesta(arbol).pop()
+    Object.entries(filas.acciones).forEach(([key, value])=>{
+      if(key === respuesta.alias){
+        filas.acciones[key].push(1)
+      }else{
+        filas.acciones[key].push(0)
+      }
+    })
+  }
+  return filas
 }

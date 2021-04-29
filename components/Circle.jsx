@@ -17,7 +17,7 @@ export default function Circle({ condicionActual }) {
     <g onClick={handleClick}>
       <circle cursor="pointer" cx={pos.x} cy={pos.y} r="40" fill="blue" stroke="black" strokeWidth="4" />
       {respuesta.includes(condicionActual) && <circle pointerEvents="none" cx={pos.x} cy={pos.y} r="40" fill="blue" stroke={checked ? 'green' : 'red'} strokeWidth="4" clipPath="url(#left-to-right)" />}
-      <text className={styles.svgText} pointerEvents="none" x={pos.x} y={pos.y + 13}>{checked ? '✅' : '⛔'}</text>
+      <text className={styles.svgText} pointerEvents="none" fill={checked ? 'green' : 'red'}  x={pos.x} y={pos.y + 13}>{condicionActual.alias}</text>
     </g>
   );
 }

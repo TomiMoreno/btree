@@ -16,6 +16,7 @@ export const AppContextProvider = ({ children }) => {
   const setArbol = (x) => {
     const nuevaRespuesta = obtenerRespuesta(arbol);
     if (nuevaRespuesta[nuevaRespuesta.length - 1] !== respuesta[respuesta.length - 1]) {
+      console.log(windowSize)
       clipPath.current.animate({ r: (windowSize.width || window.innerWidth) * x }, { duration: 500, fill: 'forwards' });
       clipPath.current.animate({ r: windowSize.width || window.innerWidth }, { duration: 500, fill: 'forwards', delay: 500 });
 

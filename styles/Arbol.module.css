@@ -9,7 +9,7 @@
 
 .svgText{
   font-size:36px;
-  fill: #FFF;
   user-select: none;
   text-anchor: middle;
+  transition:all .5s;
 }
