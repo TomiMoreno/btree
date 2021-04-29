@@ -114,14 +114,14 @@ export function iterar(){
       if(i%e === 0) {
         condicion.esVerdadero = !condicion.esVerdadero
       }
-      filas.condiciones[condicion.alias].push(Number(condicion.esVerdadero))
+      filas.condiciones[condicion.alias].push(condicion.esVerdadero? 'S' : 'N')
     })
     let respuesta = obtenerRespuesta(arbol).pop()
     Object.entries(filas.acciones).forEach(([key, value])=>{
       if(key === respuesta.alias){
-        filas.acciones[key].push(1)
+        filas.acciones[key].push('x')
       }else{
-        filas.acciones[key].push(0)
+        filas.acciones[key].push(' ')
       }
     })
   }

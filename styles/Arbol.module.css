@@ -13,3 +13,27 @@
   text-anchor: middle;
   transition:all .5s;
 }
+.tabla, .tabla *{
+  border: 1px solid black;
+}
+.tabla *{
+  height: 30px;
+}
+
+.tabla {
+  
+  border-collapse: collapse;
+}
+.tabla td{
+  width: 4vw;
+  text-align: center;
+}
+.tablaContainer{
+  overflow-x:auto;
+}
+.tabla .tdTrue{
+  background-color: green;
+}
+.tabla .tdFalse{
+  background-color: red;
+}
