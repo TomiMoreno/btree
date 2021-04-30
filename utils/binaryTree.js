@@ -1,52 +1,28 @@
 const arbol = {
   alias: 'C1',
-  nombre: 'Gano el piedra papel o tijera.',
+  nombre: 'Cancela dentro de los 15 días y es ≥ 50.000',
   tipo: 'condicion',
   esVerdadero: true,
   S: {
     alias: 'C2',
     tipo: 'condicion',
-    nombre: 'Tiro una moneda al aire y cae de costado',
+    nombre: 'Es < a 100.000',
     esVerdadero: true,
     S: {
-      alias: 'C3',
-      tipo: 'condicion',
-      nombre: 'Tiro un dado de 20 caras y sale el 13',
-      esVerdadero: true,
-      S: {
-        alias: 'A1',
-        tipo: 'accion',
-        accion: 'Agarrame la que me crece',
-      },
-      N: {
-        alias: 'A2',
-        tipo: 'accion',
-        accion: 'Tenes que entregarle un ojo a odín a cambio de toda la sabiduría universal.',
-
-      },
+      alias: 'A1',
+      tipo: 'accion',
+      accion: '2% de descuento',
     },
     N: {
-      alias: 'C4',
-      tipo: 'condicion',
-      nombre: 'Me clasifico para las olimpiadas paraplejicas de poker online',
-      esVerdadero: true,
-      S: {
-        alias: 'A3',
-        tipo: 'accion',
-        accion: 'Salgo campeon del mundo y la pongo',
-      },
-      N: {
-        alias: 'A4',
-        tipo: 'accion',
-        accion: 'Me tiro un pedo frente a la que me gusta y se da cuenta',
-
-      },
+      alias: 'A2',
+      tipo: 'accion',
+      accion: '5% de descuento',
     },
   },
   N: {
-    alias: 'A5',
+    alias: 'A3',
     tipo: 'accion',
-    accion: 'Me matan los tiburones.',
+    accion: 'No hay descuento',
   },
 };
 // Crea el arbol, añade la propiedad nivelActual a cada condicion
