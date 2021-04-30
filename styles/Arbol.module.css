@@ -7,6 +7,9 @@
   align-items: center;
 }
 
+.container circle:focus{
+  outline:none;
+}
 .svgText{
   font-size:36px;
   user-select: none;
@@ -25,7 +28,7 @@
   border-collapse: collapse;
 }
 .tabla td{
-  width: 4vw;
+  min-width: 52px;
   text-align: center;
 }
 .tablaContainer{
@@ -36,4 +39,19 @@
 }
 .tabla .tdFalse{
   background-color: red;
+}
+.tooltip{
+  color: #fff;
+  background: #222;
+  border: 1px solid transparent;
+}
+.tooltip::after{
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  bottom: -6px;
+  left: 50%;
+  margin-left: -8px;
+  border-top-color: #222;
+  border-top-style: solid;
+  border-top-width: 6px;
 }

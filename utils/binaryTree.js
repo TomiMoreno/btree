@@ -1,28 +1,52 @@
 const arbol = {
   alias: 'C1',
-  nombre: 'Cancela dentro de los 15 días y es ≥ 50.000',
+  nombre: 'Gano el piedra papel o tijera.',
   tipo: 'condicion',
   esVerdadero: true,
   S: {
     alias: 'C2',
     tipo: 'condicion',
-    nombre: 'Es < a 100.000',
+    nombre: 'Tiro una moneda al aire y cae de costado',
     esVerdadero: true,
     S: {
-      alias: 'A1',
-      tipo: 'accion',
-      accion: '2% de descuento',
+      alias: 'C3',
+      tipo: 'condicion',
+      nombre: 'Tiro un dado de 20 caras y sale el 13',
+      esVerdadero: true,
+      S: {
+        alias: 'A1',
+        tipo: 'accion',
+        accion: 'Agarrame la que me crece',
+      },
+      N: {
+        alias: 'A2',
+        tipo: 'accion',
+        accion: 'Tenes que entregarle un ojo a odín a cambio de toda la sabiduría universal.',
+
+      },
     },
     N: {
-      alias: 'A2',
-      tipo: 'accion',
-      accion: '5% de descuento',
+      alias: 'C4',
+      tipo: 'condicion',
+      nombre: 'Me clasifico para las olimpiadas paraplejicas de poker online',
+      esVerdadero: true,
+      S: {
+        alias: 'A3',
+        tipo: 'accion',
+        accion: 'Salgo campeon del mundo y la pongo',
+      },
+      N: {
+        alias: 'A4',
+        tipo: 'accion',
+        accion: 'Me tiro un pedo frente a la que me gusta y se da cuenta',
+
+      },
     },
   },
   N: {
-    alias: 'A3',
+    alias: 'A5',
     tipo: 'accion',
-    accion: 'No hay descuento',
+    accion: 'Me matan los tiburones.',
   },
 };
 // Crea el arbol, añade la propiedad nivelActual a cada condicion
@@ -55,14 +79,14 @@ export function crearArbol() {
     }
     if (nodoActual.tipo === 'condicion') {
       condiciones.push(nodoActual);
-    } else{
-      acciones.push(nodoActual)
+    } else {
+      acciones.push(nodoActual);
     }
   }
   asignarPosicionEnY(segmentoActual);
   asignarPosicionEnX(segmentos, arbol);
   arbol.condiciones = condiciones;
-  arbol.acciones = acciones.sort((a,b) => a.alias.localeCompare(b.alias))
+  arbol.acciones = acciones.sort((a, b) => a.alias.localeCompare(b.alias));
   return arbol;
 }
 function asignarPosicionEnY(segmentoActual) {
@@ -97,33 +121,37 @@ export function obtenerRespuesta(arbol) {
   return respuestas;
 }
 
-export function iterar(){
-  const {condiciones, acciones} = arbol
-  const filas = {condiciones:{},acciones:{}}
-  const ciclo = condiciones.map((_e,i)=>2**i)
-  let longitud = 2 ** condiciones.length
-  for(const accion of acciones){
-    filas.acciones[accion.alias] = []
-  }
-  for(const condicion of condiciones){
-    filas.condiciones[condicion.alias] = []
-  }
-  for(let i = 0; i < longitud; i++){
-    ciclo.forEach((e, index)=>{
-      const condicion = condiciones[index]
-      if(i%e === 0) {
-        condicion.esVerdadero = !condicion.esVerdadero
+export function iterar() {
+  const { condiciones, acciones } = arbol;
+  const filas = { condiciones: {}, acciones: {} };
+  let ciclo = condiciones.map((_e, i) => 2 ** i);
+  ciclo = ciclo.reverse();
+  const longitud = 2 ** condiciones.length;
+  acciones.forEach((accion) => {
+    filas.acciones[accion.alias] = [accion.accion];
+  });
+  condiciones.forEach((condicion) => {
+    filas.condiciones[condicion.alias] = [condicion.nombre];
+  });
+  for (let i = 0; i < longitud; i++) {
+    ciclo.forEach((e, index) => {
+      const condicion = condiciones[index];
+      if (i === 0) {
+        condicion.esVerdadero = false;
       }
-      filas.condiciones[condicion.alias].push(condicion.esVerdadero? 'S' : 'N')
-    })
-    let respuesta = obtenerRespuesta(arbol).pop()
-    Object.entries(filas.acciones).forEach(([key, value])=>{
-      if(key === respuesta.alias){
-        filas.acciones[key].push('x')
-      }else{
-        filas.acciones[key].push(' ')
+      if (i % e === 0) {
+        condicion.esVerdadero = !condicion.esVerdadero;
       }
-    })
+      filas.condiciones[condicion.alias].push(condicion.esVerdadero ? 'S' : 'N');
+    });
+    const respuesta = obtenerRespuesta(arbol).pop();
+    Object.entries(filas.acciones).forEach(([key]) => {
+      if (key === respuesta.alias) {
+        filas.acciones[key].push('X');
+      } else {
+        filas.acciones[key].push(' ');
+      }
+    });
   }
-  return filas
+  return filas;
 }
