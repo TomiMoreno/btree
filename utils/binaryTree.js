@@ -1,28 +1,36 @@
 const arbol = {
   alias: 'C1',
-  nombre: 'Cancela dentro de los 15 días y es ≥ 50.000',
+  nombre: 'Paga con cheque al día y no es cliente habitual',
   tipo: 'condicion',
-  esVerdadero: true,
   S: {
     alias: 'C2',
     tipo: 'condicion',
-    nombre: 'Es < a 100.000',
-    esVerdadero: true,
+    nombre: 'Es cliente habitual',
     S: {
-      alias: 'A1',
-      tipo: 'accion',
-      accion: '2% de descuento',
+      alias: 'C3',
+      tipo: 'condicion',
+      nombre: 'Paga con cheque al día y no paga con cheque a 30 días',
+      S: {
+        alias: 'A3',
+        tipo: 'accion',
+        accion: '14,7% de descuento',
+      },
+      N: {
+        alias: 'A4',
+        tipo: 'accion',
+        accion: '6,5% de descuento',
+      },
     },
     N: {
       alias: 'A2',
       tipo: 'accion',
-      accion: '5% de descuento',
+      accion: '0% de descuento',
     },
   },
   N: {
-    alias: 'A3',
+    alias: 'A1',
     tipo: 'accion',
-    accion: 'No hay descuento',
+    accion: '5,2% de descuento',
   },
 };
 // Crea el arbol, añade la propiedad nivelActual a cada condicion
@@ -54,9 +62,12 @@ export function crearArbol() {
       nodoActual.N.nivelActual = nivelActual + 1;
     }
     if (nodoActual.tipo === 'condicion') {
+      
       condiciones.push(nodoActual);
+      nodoActual.alias = 'C' + condiciones.length
     } else {
       acciones.push(nodoActual);
+      nodoActual.alias = 'A' + acciones.length
     }
   }
   asignarPosicionEnY(segmentoActual);
@@ -100,6 +111,7 @@ export function obtenerRespuesta(arbol) {
 export function iterar() {
   const { condiciones, acciones } = arbol;
   const filas = { condiciones: {}, acciones: {} };
+  let count = 0
   let ciclo = condiciones.map((_e, i) => 2 ** i);
   ciclo = ciclo.reverse();
   const longitud = 2 ** condiciones.length;
@@ -110,16 +122,21 @@ export function iterar() {
     filas.condiciones[condicion.alias] = [condicion.nombre];
   });
   for (let i = 0; i < longitud; i++) {
+    count = 0
     ciclo.forEach((e, index) => {
       const condicion = condiciones[index];
-      if (i === 0) {
-        condicion.esVerdadero = false;
+      if (i === 0) condicion.esVerdadero = false;
+      if (i % e === 0) condicion.esVerdadero = !condicion.esVerdadero;
+
+      const respuesta = obtenerRespuesta(arbol)
+      if (respuesta.includes(condicion)){
+        filas.condiciones[condicion.alias].push(condicion.esVerdadero ? 'S' : 'N');
+      } else {
+        filas.condiciones[condicion.alias].push('*');
+        count++
       }
-      if (i % e === 0) {
-        condicion.esVerdadero = !condicion.esVerdadero;
-      }
-      filas.condiciones[condicion.alias].push(condicion.esVerdadero ? 'S' : 'N');
     });
+    i+= 2 ** count - 1
     const respuesta = obtenerRespuesta(arbol).pop();
     Object.entries(filas.acciones).forEach(([key]) => {
       if (key === respuesta.alias) {
