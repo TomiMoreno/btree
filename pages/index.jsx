@@ -1,9 +1,9 @@
-import { MongoClient } from 'mongodb';
 import Head from 'next/head';
 import styles from '../styles/Arbol.module.css';
 import Arbol from '../components/Arbol';
 import Tabla from '../components/Tabla';
 import { AppContextProvider } from '../store/arbolContext';
+import { findOne } from '../utils/db';
 
 export default function Home({ stringifiedTree }) {
   const arbolInicial = JSON.parse(stringifiedTree);
@@ -20,14 +20,8 @@ export default function Home({ stringifiedTree }) {
   );
 }
 export async function getStaticProps() {
-  const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.alkwu.mongodb.net/btree?retryWrites=true&w=majority`;
-  const client = await MongoClient.connect(uri);
-  const database = await client.db('btree');
-  const trees = await database.collection('trees');
-
-  const query = {};
-  const tree = await trees.findOne(query);
-  const stringifiedTree = JSON.stringify(tree);
+  const tree = await findOne();
+  const stringifiedTree = tree ? JSON.stringify(tree) : tree;
   return {
     props: { stringifiedTree },
   };

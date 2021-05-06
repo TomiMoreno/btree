@@ -31,7 +31,7 @@ function renderizarArbol(arbol) {
 }
 
 export default function Arbol() {
-  const { arbol, respuesta } = useAppContext();
+  const { arbol } = useAppContext();
   const [arbolRender, setArbolRender] = useState(() => renderizarArbol(arbol));
   useEffect(() => {
     setArbolRender(renderizarArbol(arbol));
@@ -39,7 +39,7 @@ export default function Arbol() {
 
   return (
     <>
-      <h1>{respuesta && respuesta[respuesta.length - 1].desc}</h1>
+      {/* <h1>{respuesta && respuesta[respuesta.length - 1].desc}</h1> */}
       <ReactTooltip backgroundColor="#000" />
       <svg width="99vw" height="99vh">
         <ClipPath />

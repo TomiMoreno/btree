@@ -1,20 +1,22 @@
 /* eslint-disable no-param-reassign */
-function asignarPosicionEnY(segmentoActual) {
-  const distanciaEntreNodosY = 1 / (2 ** (segmentoActual[0].nivelActual - 1) + 1);
-  for (let i = 0; i < segmentoActual.length; i++) {
-    const nodo = segmentoActual[i];
-    nodo.y = (i + 1) * distanciaEntreNodosY;
-  }
-}
-
-function asignarPosicionEnX(segmentos, arbol) {
+function asignarPosiciones(segmentos, arbol) {
   const cantidadDeSegmentos = segmentos.length;
   const tamañoSegmento = 1 / (cantidadDeSegmentos - 1);
   const nodosARecorrer = [arbol];
   let nodoActual = nodosARecorrer.shift();
   while (nodoActual) {
-    if (nodoActual.S) nodosARecorrer.push(nodoActual.S);
-    if (nodoActual.N) nodosARecorrer.push(nodoActual.N);
+    if (nodoActual.nivelActual === 1) {
+      nodoActual.y = 1 / 2;
+    }
+    const distanciaEntreNodosY = 1 / (2 ** (nodoActual.nivelActual) + 1);
+    if (nodoActual.S) {
+      nodoActual.S.y = nodoActual.y - distanciaEntreNodosY / 2;
+      nodosARecorrer.push(nodoActual.S);
+    }
+    if (nodoActual.N) {
+      nodoActual.N.y = nodoActual.y + distanciaEntreNodosY / 2;
+      nodosARecorrer.push(nodoActual.N);
+    }
     nodoActual.x = tamañoSegmento / 2 + (nodoActual.nivelActual - 1) * tamañoSegmento;
     nodoActual = nodosARecorrer.shift();
   }
@@ -27,21 +29,14 @@ export function crearArbol(arbol) {
   const condiciones = [];
   const acciones = [];
   const segmentos = [];
-  let segmentoActual = [];
   let nodoActual = condicionesAVisitar.shift();
   arbol.nivelActual = nivelActual;
   while (nodoActual) {
     if (nodoActual.nivelActual !== nivelActual) {
       nivelActual++;
-      asignarPosicionEnY(segmentoActual);
-      segmentoActual = [];
-      // cambio de segmento
     }
-    segmentoActual.push(nodoActual);
-    // Visitar nodos si son de tipo condicion
     if (segmentos[nivelActual]) segmentos[nivelActual]++;
     else segmentos[nivelActual] = 1;
-
     if (nodoActual.S) {
       condicionesAVisitar.push(nodoActual.S);
       nodoActual.S.nivelActual = nivelActual + 1;
@@ -59,8 +54,7 @@ export function crearArbol(arbol) {
     }
     nodoActual = condicionesAVisitar.shift();
   }
-  asignarPosicionEnY(segmentoActual);
-  asignarPosicionEnX(segmentos, arbol);
+  asignarPosiciones(segmentos, arbol);
   arbol.condiciones = condiciones;
   arbol.acciones = acciones.sort((a, b) => a.alias.localeCompare(b.alias));
   return arbol;
@@ -76,6 +70,17 @@ export function obtenerRespuesta(arbol) {
   }
   respuestas.push(nodoActual);
   return respuestas;
+}
+
+function setEsVerdadero(arbol, verdad) {
+  const nodosARecorrer = [arbol];
+  let nodoActual = nodosARecorrer.shift();
+  while (nodoActual) {
+    nodoActual.esVerdadero = verdad;
+    if (nodoActual.S.tipo === 'condicion') nodosARecorrer.push(nodoActual.S);
+    if (nodoActual.N.tipo === 'condicion') nodosARecorrer.push(nodoActual.N);
+    nodoActual = nodosARecorrer.shift();
+  }
 }
 
 export function iterar(arbol) {
@@ -115,5 +120,6 @@ export function iterar(arbol) {
       }
     });
   }
+  setEsVerdadero(arbol, false);
   return filas;
 }
