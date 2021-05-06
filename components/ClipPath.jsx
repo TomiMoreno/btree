@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppContext } from './Context';
+import { useAppContext } from '../store/arbolContext';
 import useWindowSize from '../hooks/useWindowSize';
 
 export default function ClipPath() {

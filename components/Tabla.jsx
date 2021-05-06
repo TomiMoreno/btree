@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { iterar } from '../utils/binaryTree';
 import styles from '../styles/Arbol.module.css';
+import { useAppContext } from '../store/arbolContext';
 
-const filas = iterar();
 export default function Tabla() {
+  const { arbol } = useAppContext();
+  const [filas] = useState(() => iterar(arbol));
   return (
     <div className={styles.tablaContainer}>
       <table className={styles.tabla}>

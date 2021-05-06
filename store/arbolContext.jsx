@@ -1,43 +1,36 @@
-import React, { useContext, createContext } from 'react';
+import React, {
+  useContext, createContext, useReducer, useEffect, useState,
+} from 'react';
 import { crearArbol, obtenerRespuesta } from '../utils/binaryTree';
 import useWindowSize from '../hooks/useWindowSize';
+import { arbolReducer } from './arbolReducer';
 
-const arbol = crearArbol();
-// Context
 export const AppContext = createContext(null);
 
 // Provider
-export const AppContextProvider = ({ children }) => {
-  const [globalState, setGlobalState] = React.useState({ arbol });
-  const [respuesta, setRespuesta] = React.useState(obtenerRespuesta(arbol));
+export const AppContextProvider = ({ children, arbolInicial }) => {
+  const [arbol, dispatchArbol] = useReducer(arbolReducer, crearArbol(arbolInicial));
+  const [respuesta, setRespuesta] = useState(obtenerRespuesta(arbol));
   const windowSize = useWindowSize();
   const clipPath = React.useRef(null);
 
-  const setArbol = (x) => {
+  useEffect(() => {
     const nuevaRespuesta = obtenerRespuesta(arbol);
     if (nuevaRespuesta[nuevaRespuesta.length - 1] !== respuesta[respuesta.length - 1]) {
-      console.log(windowSize);
-      clipPath.current.animate({ r: (windowSize.width || window.innerWidth) * x }, { duration: 500, fill: 'forwards' });
+      clipPath.current.animate({ r: (windowSize.width || window.innerWidth) * arbol.xAnimation }, { duration: 500, fill: 'forwards' });
       clipPath.current.animate({ r: windowSize.width || window.innerWidth }, { duration: 500, fill: 'forwards', delay: 500 });
-
-      setTimeout(() => { setRespuesta(nuevaRespuesta); setGlobalState({ ...globalState }); }, 500);
+      setTimeout(() => setRespuesta(obtenerRespuesta(arbol)), 500);
     }
-    setGlobalState({ ...globalState });
-  };
-  // ComponentDidMouunt
-
-  //
+  }, [arbol]);
   const values = React.useMemo(() => (
     {
-      globalState,
+      arbol,
       respuesta,
       clipPath, // States que seran visibles en el contexto.
-      setGlobalState,
-      setRespuesta,
-      setArbol, // Funciones que son exportadas para manejo externo.
+      dispatchArbol,
+      setRespuesta, // Funciones que son exportadas para manejo externo.
     }),
-  [
-    globalState, respuesta]); // States que serán visibles en el contexto.
+  [arbol, respuesta]); // States que serán visibles en el contexto.
 
   // Interface donde será expuesto como proveedor y envolverá la App.
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;

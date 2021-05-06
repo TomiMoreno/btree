@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useAppContext } from './Context';
+import ReactTooltip from 'react-tooltip';
+import { useEffect, useState } from 'react';
+import { useAppContext } from '../store/arbolContext';
 import Circle from './Circle';
 import Rect from './Rect';
 import Line from './Line';
@@ -30,15 +31,21 @@ function renderizarArbol(arbol) {
 }
 
 export default function Arbol() {
-  const { globalState } = useAppContext();
-  const { arbol } = globalState;
-  const [arbolRender] = useState(() => renderizarArbol(arbol));
+  const { arbol, respuesta } = useAppContext();
+  const [arbolRender, setArbolRender] = useState(() => renderizarArbol(arbol));
+  useEffect(() => {
+    setArbolRender(renderizarArbol(arbol));
+  }, [arbol]);
 
   return (
-    <svg width="99vw" height="99vh">
-      <ClipPath />
-      {arbolRender[1]}
-      {arbolRender[0]}
-    </svg>
+    <>
+      <h1>{respuesta && respuesta[respuesta.length - 1].desc}</h1>
+      <ReactTooltip backgroundColor="#000" />
+      <svg width="99vw" height="99vh">
+        <ClipPath />
+        {arbolRender[1]}
+        {arbolRender[0]}
+      </svg>
+    </>
   );
 }

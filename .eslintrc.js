@@ -27,5 +27,6 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'linebreak-style': 'off',
     'react/prop-types': 'off',
+    'no-plusplus': 'off',
   },
 };

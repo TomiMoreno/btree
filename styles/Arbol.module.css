@@ -40,7 +40,7 @@
 .tabla .tdFalse{
   background-color: red;
 }
-.tooltip{
+/* .tooltip{
   color: #fff;
   background: #222;
   border: 1px solid transparent;
@@ -54,4 +54,4 @@
   border-top-color: #222;
   border-top-style: solid;
   border-top-width: 6px;
-}
+} */
