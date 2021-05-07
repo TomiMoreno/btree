@@ -40,6 +40,10 @@
 .tabla .tdFalse{
   background-color: red;
 }
+.accion{
+  position: absolute;
+  top: 0;
+}
 /* .tooltip{
   color: #fff;
   background: #222;

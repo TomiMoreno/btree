@@ -1,6 +1,7 @@
 import ReactTooltip from 'react-tooltip';
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../store/arbolContext';
+import styles from '../styles/Arbol.module.css';
 import Circle from './Circle';
 import Rect from './Rect';
 import Line from './Line';
@@ -31,7 +32,7 @@ function renderizarArbol(arbol) {
 }
 
 export default function Arbol() {
-  const { arbol } = useAppContext();
+  const { arbol, respuesta } = useAppContext();
   const [arbolRender, setArbolRender] = useState(() => renderizarArbol(arbol));
   useEffect(() => {
     setArbolRender(renderizarArbol(arbol));
@@ -39,7 +40,7 @@ export default function Arbol() {
 
   return (
     <>
-      {/* <h1>{respuesta && respuesta[respuesta.length - 1].desc}</h1> */}
+      <h1 className={styles.accion}>{respuesta && respuesta[respuesta.length - 1].desc}</h1>
       <ReactTooltip backgroundColor="#000" />
       <svg width="99vw" height="99vh">
         <ClipPath />
